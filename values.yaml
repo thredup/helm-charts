@@ -7,6 +7,7 @@ debug: false
 
 server:
   enabled: true
+  sidecarContainers:
   image:
     repository: temporalio/server
     tag: 1.12.0
@@ -24,6 +25,10 @@ server:
     serviceMonitor:
       enabled: false
       interval: 30s
+      # Set additional lables to all the ServiceMonitor resources
+      additionalLabels: {}
+      #  label1: value1
+      #  label2: value2
       # Set Prometheus metric_relabel_configs via ServiceMonitor
       # Use metricRelabelings to adjust metric and label names as needed
       metricRelabelings: []
@@ -224,6 +229,14 @@ admintools:
 
 web:
   enabled: true
+  config:
+    # server/config.yml file content
+    auth:
+      enabled: false
+    routing:
+      default_to_namespace: # internal use only
+      issue_report_link: https://github.com/temporalio/web/issues/new/choose # set this field if you need to direct people to internal support forums
+
 
   replicaCount: 1
 
