@@ -1,11 +1,5 @@
 {{- if .Values.web.ingress.enabled -}}
-  {{- if semverCompare ">=1.19" .Capabilities.KubeVersion.Version }}
-apiVersion: networking.k8s.io/v1
-  {{- else if semverCompare ">=1.14" .Capabilities.KubeVersion.Version }}
 apiVersion: networking.k8s.io/v1beta1
-  {{- else  }}
-apiVersion: extensions/v1beta1
-  {{- end }}
 kind: Ingress
 metadata:
   name: {{ include "temporal.componentname" (list . "web") }}
@@ -39,17 +33,8 @@ spec:
         http:
           paths:
             - path: /{{ rest $url | join "/" }}
-              {{- if $.Capabilities.APIVersions.Has "networking.k8s.io/v1" }}
-              pathType: Prefix
-              backend:
-                service:
-                  name: {{ include "temporal.fullname" $ }}-web
-                  port:
-                    number: {{ $.Values.web.service.port }}
-              {{- else if $.Capabilities.APIVersions.Has "networking.k8s.io/v1beta1" }}
               backend:
                 serviceName: {{ include "temporal.fullname" $ }}-web
                 servicePort: {{ $.Values.web.service.port }}
-              {{- end }}
       {{- end}}
-    {{- end }}
+{{- end }}
