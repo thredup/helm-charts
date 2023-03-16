@@ -1,9 +1,9 @@
 {{- if .Values.web.ingress.enabled -}}
-  {{- if semverCompare ">=1.19.0" .Capabilities.KubeVersion }}
+  {{- if .Capabilities.APIVersions.Has "networking.k8s.io/v1" }}
 apiVersion: networking.k8s.io/v1
-  {{- else if semverCompare ">=1.14.0" .Capabilities.KubeVersion }}
+  {{- else if .Capabilities.APIVersions.Has "networking.k8s.io/v1beta1" }}
 apiVersion: networking.k8s.io/v1beta1
-  {{- else  }}
+  {{- else if .Capabilities.APIVersions.Has "extensions/v1beta1" }}
 apiVersion: extensions/v1beta1
   {{- end }}
 kind: Ingress
